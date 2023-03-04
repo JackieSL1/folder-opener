@@ -1,3 +1,9 @@
-# Ignore all json reference files except for example
+# Ignore all JSON reference files excluding example
 *.json
 !example.json
+
+# Ignore user configurations
+config.py
+
+# Ignore cached files
+__pycache__
