@@ -2,6 +2,7 @@ import os
 import sys
 import json
 
+
 path_reference = 'C:\\development\\commands\\FolderOpener\\paths.json'
 sys.tracebacklimit = 0
 
