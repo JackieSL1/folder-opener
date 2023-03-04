@@ -1,4 +1,6 @@
 {
     "default": "C:\\Users",
-    "home": "C:\\Users"
+    "documents": "C:\\Users\\your_name\\Documents",
+    "pictures": "C:\\Users\\your_name\\Pictures",
+    "videos": "C:\\Users\\your_name\\Videos"
 }

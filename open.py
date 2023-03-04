@@ -1,15 +1,17 @@
 import os
 import sys
 import json
+import re
+from config import REFERENCES_PATH
 
 
-path_reference = 'C:\\development\\commands\\FolderOpener\\paths.json'
+# Suppress stack trace
 sys.tracebacklimit = 0
 
 
 def main(arg: str):
     arg = process_arg(arg)
-    path = get_folder(arg)
+    path = get_folder_path(arg)
 
     open_folder(path)
 
@@ -22,25 +24,52 @@ def process_arg(arg):
     return arg.strip().lower()
 
 
-def get_folder(prefix: str) -> str:
-    folders = get_folder_paths(path_reference)
+def get_folder_path(prefix: str) -> str:
+    """Return the folder path associated with prefix"""
+    folders = create_folder_dict(REFERENCES_PATH)
+    prefix = autocomplete(prefix, folders.keys())
     folder_path = folders[prefix]
 
     return folder_path
 
 
-def get_folder_paths(reference_path: str) -> dict:
+def create_folder_dict(reference_path: str) -> dict:
+    """Return a dictionary storing the different folder paths and their prefixes from the JSON file at REFERENCES"""
     with open(reference_path, "r") as json_file:
         return_dict = json.load(json_file)
 
     return return_dict
 
 
+def autocomplete(prefix: str, references: list[str]) -> str:
+    """Return an autocompleted version of the prefix
+
+    Raises a ValueError if zero or multiple results are found
+    """
+    r_start_of_line = re.compile(f"{prefix}.*")
+    r_in_line = re.compile(f".*{prefix}.*")
+
+    for r in (r_start_of_line, r_in_line):
+
+        match_results = list(filter(r.match, references))
+
+        if len(match_results) > 1:
+            raise ValueError(
+                f"Multiple prefixes were found for arg \"{prefix}\":\n\n" +
+                f"   {', '.join(match_results)}\n\n" +
+                "Narrow down your search")
+
+        elif len(match_results) == 1:
+            return match_results[0]
+
+    raise ValueError(f"No prefix found for arg \"{prefix}\"")
+
+
 def open_folder(path: str) -> None:
     """Open the folder in File Explorer specified by path"""
     path = os.path.realpath(path)
     try:
-        os.startfile(path + "1")
+        os.startfile(path)
     except FileNotFoundError as e:
         raise FileNotFoundError(f"Can't find file at \"{path}\"") from None
 
