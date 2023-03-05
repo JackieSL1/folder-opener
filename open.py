@@ -9,11 +9,17 @@ from config import REFERENCES_PATH
 sys.tracebacklimit = 0
 
 
-def main(arg: str):
+def main():
+    arg = sys.argv[1]
     arg = process_arg(arg)
-    path = get_folder_path(arg)
 
-    open_folder(path)
+    if arg[0] != '-':
+        path = get_folder_path(arg)
+        open_folder(path)
+
+    if arg == '-add':
+        print("Adding")
+        # add_path()
 
 
 def process_arg(arg):
@@ -75,5 +81,4 @@ def open_folder(path: str) -> None:
 
 
 if __name__ == '__main__':
-    arg = sys.argv[1]
-    main(arg)
+    main()
