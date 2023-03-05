@@ -3,7 +3,7 @@
 !example.json
 
 # Ignore user configurations
-config.py
+/config.py
 
 # Ignore cached files
 __pycache__
